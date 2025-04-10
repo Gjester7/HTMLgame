@@ -17,6 +17,16 @@ const background = new Sprite({
     scale: 1.311
 })
 
+const cat = new Sprite({
+    position: {
+        x: 600,
+        y: 450
+    },
+    imageSrc: './src/img/Idle.png',
+    scale: 1.8,
+    framesMax: 10
+})
+
 const player = new Fighter({
     position: {
         x: 0,
@@ -29,6 +39,31 @@ const player = new Fighter({
     offset: {
         x: 0,
         y: 0
+    },
+    imageSrc: './src/img/samuraiPlayer/IDLE.png',
+    framesMax: 10,
+    scale: 4,
+    offset: {
+        x: 150,
+        y: 180
+    },
+    sprites: {
+        idle: {
+            imageSrc: './src/img/samuraiPlayer/IDLE.png',
+            framesMax: 10
+        },
+        run: {
+            imageSrc: './src/img/samuraiPlayer/RUN.png',
+            framesMax: 16
+        },
+        jump: {
+            imageSrc: './src/img/samuraiPlayer/JUMP.png',
+            framesMax: 2
+        },
+        fall: {
+            imageSrc: './src/img/samuraiPlayer/FALL.png',
+            framesMax: 2
+        }
     }
 })
 
@@ -71,18 +106,31 @@ function animate() {
     window.requestAnimationFrame(animate)
     c.fillStyle = 'black'
     c.fillRect(0, 0, canvas.width, canvas.height)
-    //background.update()
+    background.update()
+    cat.update()
     player.update()
-    enemy.update()
+    //enemy.update()
 
     player.velocity.x = 0
     enemy.velocity.x = 0
 
     // player movement
+    
     if (keys.a.pressed && player.lastKey === 'a') {
         player.velocity.x = -5
+        player.switchSprite('run')
     } else if (keys.d.pressed && player.lastKey === 'd') {
         player.velocity.x = 5
+        player.switchSprite('run')
+    } else {
+        player.switchSprite('idle')
+    }
+
+    //jumping
+    if (player.velocity.y < 0) {
+        player.switchSprite('jump')
+    } else if (player.velocity.y > 0) {
+        player.switchSprite('fall')
     }
 
     // enemy movement
